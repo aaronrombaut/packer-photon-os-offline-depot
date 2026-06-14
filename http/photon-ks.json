@@ -2,7 +2,7 @@
   "hostname": "offline-depot",
   "password": {
     "crypted": false,
-    "text": "CHANGE_ME"
+    "text": "VMware1!"
   },
   "bootmode": "efi",
   "disk": "/dev/sda",
