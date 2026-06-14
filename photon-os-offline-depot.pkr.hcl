@@ -45,6 +45,8 @@ source "vsphere-iso" "photon" {
   iso_paths = [
     var.iso_path
   ]
+  remove_cdrom = false
+  cdrom_type = "sata"
 
   communicator = "ssh"
   ssh_username = var.ssh_username
@@ -54,12 +56,13 @@ source "vsphere-iso" "photon" {
   shutdown_command = "shutdown -h now"
 
   http_directory = "http"
+  http_bind_address = "10.10.92.55"
 
   boot_wait = "5s"
   boot_command = [
-    "<wait5>",
+    "<wait7>",
     "e<wait>",
-    " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-ks.json<wait>",
+    " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-ks.cfg<wait>",
     "<enter><wait>",
     "<enter>"
   ]
