@@ -7,16 +7,17 @@ packer {
   }
 }
 
-source "vmware-iso" "photon" {
-  iso_url      = "C:/iso/photon-minimal-5.0-dde71ec57.x86_64.iso"
+source "vsphere-iso" "photon" {
+  
+  iso_url      = var.iso_path
   iso_checksum = "sha256:691D09EB61F8CAD470F21C88287FF6B005C3BE365C926A87577E714AEE2D46BC"
 
-  vm_name       = "photon-offline-depot"
+  vm_name       = var.vm_name
   guest_os_type = "vmware-photon-64"
   firmware      = "efi"
 
-  cpus   = 2
-  memory = 8192
+  cpus   = var.cpus
+  memory = var.memory
 
   disk_size = 40960
   disk_additional_size = [
@@ -26,13 +27,15 @@ source "vmware-iso" "photon" {
   disk_adapter_type = "scsi"
   disk_type_id      = 0
 
-  network              = "nat"
-  network_adapter_type = "vmxnet3"
+  network_adapters {
+    network      = "dvPG-VLAN106-Core Services"
+    network_card = "vmxnet3"
+  }
 
   communicator = "ssh"
-  ssh_username = "root"
-  ssh_password = "VMware1!"
-  ssh_timeout  = "15m"
+  ssh_username = var.ssh_username
+  ssh_password = var.ssh_password
+  ssh_timeout  = "30m"
 
   shutdown_command = "shutdown -h now"
 
@@ -44,7 +47,7 @@ source "vmware-iso" "photon" {
   boot_command = [
     "<wait5>",
     "e<wait>",
-    " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/offline-depot-ks.cfg<wait>",
+    " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-ks.json<wait>",
     "<enter><wait>",
     "<enter>"
   ]
@@ -52,4 +55,8 @@ source "vmware-iso" "photon" {
 
 build {
   sources = ["source.vmware-iso.photon"]
+
+  content_library_destination {
+    library = "General Purpose"
+  }
 }
