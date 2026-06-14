@@ -8,6 +8,7 @@ packer {
 }
 
 source "vsphere-iso" "photon" {
+  /* vCenter Server Details */
   vcenter_server      = var.vcenter_server
   username            = var.vcenter_username
   password            = var.vcenter_password
@@ -16,11 +17,12 @@ source "vsphere-iso" "photon" {
   datacenter = var.datacenter
   cluster    = var.cluster
   datastore  = var.datastore
-  folder     = var.folder
+#  folder     = var.folder
 
+  /* Virtual Machine Details */
   vm_name       = var.vm_name
   guest_os_type = "vmwarePhoton64Guest"
-  firmware      = "efi"
+  firmware      = "bios"
 
   CPUs = var.cpus
   RAM  = var.memory
@@ -58,14 +60,21 @@ source "vsphere-iso" "photon" {
   http_directory = "http"
   http_bind_address = "10.10.92.55"
 
-  boot_wait = "5s"
+  boot_wait = "2s"
+  # boot_command = [
+  #   "e<wait5>",
+  #   "<down><down>",
+  #   "<leftCtrlOn>e<leftCtrlOff>",
+  #   " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-ks.cfg insecure_installation=1",
+  #   "<f10>"
+  # ]
   boot_command = [
-    "<wait7>",
-    "e<wait>",
-    " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-ks.cfg<wait>",
-    "<enter><wait>",
-    "<enter>"
-  ]
+  "<wait5>",
+  "<tab>",
+  "<end>",
+  " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-ks.cfg insecure_installation=1",
+  "<enter>"
+]
 }
 
 build {
