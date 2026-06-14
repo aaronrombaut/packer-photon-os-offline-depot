@@ -1,35 +1,50 @@
 packer {
   required_plugins {
-    vmware = {
-      version = ">= 1.0.0"
-      source  = "github.com/hashicorp/vmware"
+    vsphere = {
+      version = ">= 1.4.2"
+      source  = "github.com/hashicorp/vsphere"
     }
   }
 }
 
 source "vsphere-iso" "photon" {
-  
-  iso_path      = var.iso_path
+  vcenter_server      = var.vcenter_server
+  username            = var.vcenter_username
+  password            = var.vcenter_password
+  insecure_connection = false
+
+  datacenter = var.datacenter
+  cluster    = var.cluster
+  datastore  = var.datastore
+  folder     = var.folder
 
   vm_name       = var.vm_name
-  guest_os_type = "vmware-photon-64"
+  guest_os_type = "vmwarePhoton64Guest"
   firmware      = "efi"
 
-  cpus   = var.cpus
-  memory = var.memory
+  CPUs = var.cpus
+  RAM  = var.memory
 
-  disk_size = var.disk_size
-  disk_additional_size = [
-    var.additional_disk_size
-  ]
+  disk_controller_type = ["pvscsi"]
 
-  disk_adapter_type = "scsi"
-  disk_type_id      = 0
+  storage {
+    disk_size             = var.disk_size
+    disk_thin_provisioned = true
+  }
+
+  storage {
+    disk_size             = var.additional_disk_size
+    disk_thin_provisioned = true
+  }
 
   network_adapters {
     network      = var.network
     network_card = "vmxnet3"
   }
+
+  iso_paths = [
+    var.iso_path
+  ]
 
   communicator = "ssh"
   ssh_username = var.ssh_username
@@ -37,8 +52,6 @@ source "vsphere-iso" "photon" {
   ssh_timeout  = "30m"
 
   shutdown_command = "shutdown -h now"
-
-  headless = false
 
   http_directory = "http"
 
@@ -53,9 +66,5 @@ source "vsphere-iso" "photon" {
 }
 
 build {
-  sources = ["source.vmware-iso.photon"]
-
-  content_library_destination {
-    library = "General Purpose"
-  }
+  sources = ["source.vsphere-iso.photon"]
 }
