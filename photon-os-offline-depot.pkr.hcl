@@ -9,8 +9,7 @@ packer {
 
 source "vsphere-iso" "photon" {
   
-  iso_url      = var.iso_path
-  iso_checksum = "sha256:691D09EB61F8CAD470F21C88287FF6B005C3BE365C926A87577E714AEE2D46BC"
+  iso_path      = var.iso_path
 
   vm_name       = var.vm_name
   guest_os_type = "vmware-photon-64"
@@ -19,16 +18,16 @@ source "vsphere-iso" "photon" {
   cpus   = var.cpus
   memory = var.memory
 
-  disk_size = 40960
+  disk_size = var.disk_size
   disk_additional_size = [
-    1048576
+    var.additional_disk_size
   ]
 
   disk_adapter_type = "scsi"
   disk_type_id      = 0
 
   network_adapters {
-    network      = "dvPG-VLAN106-Core Services"
+    network      = var.network
     network_card = "vmxnet3"
   }
 

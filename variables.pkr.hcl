@@ -25,11 +25,6 @@ variable "cluster" {
     type        = string
 }
 
-variable "vm_name" {
-    description = "The name of the VM to create."
-    type        = string
-}
-
 variable "memory" {
     description = "The amount of memory to allocate to the VM."
     type        = number
@@ -51,7 +46,43 @@ variable "ssh_password" {
     sensitive   = true
 }
 
+variable "datastore" {
+  description = "The datastore where the VM will be created."
+  type        = string
+}
+
+variable "network" {
+  description = "The vSphere network or distributed port group for the VM."
+  type        = string
+  default     = "dvPG-VLAN106-Core Services"
+}
+
 variable "iso_path" {
-    description = "The path to the ISO file for the VM."
-    type        = string
+  description = "Content Library or datastore ISO path."
+  type        = string
+  default     = "General Purpose/photon-minimal-5.0-dde71ec57.x86_64/photon-minimal-5.0-dde71ec57.x86_64.iso"
+}
+
+variable "vm_name" {
+  description = "The name of the VM created by Packer."
+  type        = string
+  default     = "photon-offline-depot"
+}
+
+variable "folder" {
+  description = "The vSphere VM folder."
+  type        = string
+  default     = ""
+}
+
+variable "disk_size" {
+  description = "The size of the VM's disk in MB."
+  type        = number
+  default     = 40960
+}
+
+variable "additional_disk_size" {
+  description = "The size of the additional disk in MB."
+  type        = number
+  default     = 1048576
 }
