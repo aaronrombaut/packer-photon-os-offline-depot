@@ -22,7 +22,7 @@ source "vsphere-iso" "photon" {
   /* Virtual Machine Details */
   vm_name       = var.vm_name
   guest_os_type = "vmwarePhoton64Guest"
-  firmware      = "bios"
+  firmware      = "efi-secure"
 
   CPUs = var.cpus
   RAM  = var.memory
@@ -34,10 +34,10 @@ source "vsphere-iso" "photon" {
     disk_thin_provisioned = true
   }
 
-  storage {
-    disk_size             = var.additional_disk_size
-    disk_thin_provisioned = true
-  }
+  # storage {
+  #   disk_size             = var.additional_disk_size
+  #   disk_thin_provisioned = true
+  # }
 
   network_adapters {
     network      = var.network
@@ -47,7 +47,7 @@ source "vsphere-iso" "photon" {
   iso_paths = [
     var.iso_path
   ]
-  remove_cdrom = false
+#  remove_cdrom = false
   cdrom_type = "sata"
 
   communicator = "ssh"
@@ -61,20 +61,13 @@ source "vsphere-iso" "photon" {
   http_bind_address = "10.10.92.55"
 
   boot_wait = "2s"
-  # boot_command = [
-  #   "e<wait5>",
-  #   "<down><down>",
-  #   "<leftCtrlOn>e<leftCtrlOff>",
-  #   " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-ks.cfg insecure_installation=1",
-  #   "<f10>"
-  # ]
   boot_command = [
-  "<wait5>",
-  "<tab>",
-  "<end>",
-  " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-ks.cfg insecure_installation=1",
-  "<enter>"
-]
+    "e<wait5>",
+    "<down><down>",
+    "<leftCtrlOn>e<leftCtrlOff>",
+    " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-ks.cfg insecure_installation=1 nomodeset console=tty0",
+    "<f10>"
+  ]
 }
 
 build {
