@@ -55,7 +55,8 @@ source "vsphere-iso" "photon" {
   ssh_password = var.ssh_password
   ssh_timeout  = "30m"
 
-  shutdown_command = "shutdown -h now"
+  shutdown_command = "echo '${var.ssh_password}' | sudo -S /sbin/shutdown -h now"
+  shutdown_timeout = "10m"
 
   http_directory = "http"
   http_bind_address = "10.10.92.55"
