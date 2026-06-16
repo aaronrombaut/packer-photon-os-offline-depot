@@ -34,10 +34,10 @@ source "vsphere-iso" "photon" {
     disk_thin_provisioned = true
   }
 
-  # storage {
-  #   disk_size             = var.additional_disk_size
-  #   disk_thin_provisioned = true
-  # }
+  storage {
+    disk_size             = var.additional_disk_size
+    disk_thin_provisioned = true
+  }
 
   network_adapters {
     network      = var.network
@@ -65,7 +65,7 @@ source "vsphere-iso" "photon" {
     "e<wait5>",
     "<down><down>",
     "<leftCtrlOn>e<leftCtrlOff>",
-    " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-ks.cfg insecure_installation=1 nomodeset console=tty0",
+    " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/photon-ks.cfg insecure_installation=1",
     "<f10>"
   ]
 }
